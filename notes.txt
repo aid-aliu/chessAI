@@ -1,0 +1,2 @@
+blit() -- to change the pixels on the screen,
+to copy the pixels from 1 image to another

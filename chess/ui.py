@@ -1,15 +1,22 @@
 import pygame
 from pygame import Surface
 
+
 # pygame setup
 pygame.init()
 screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 
-cellSize = 20
+SCREEN_WIDTH = 1280
+SCREEN_HEIGHT = 720
+
+cellSize = 55
 board = Surface((cellSize * 8, cellSize * 8))
-board.fill((255, 255, 255))
+board_rect = board.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+
+pygame.display.set_caption("ChessAI")
+
 for x in range(0, 8):
     for y in range(0, 8):
         if  x % 2 == 0:
@@ -31,9 +38,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-
-
-    screen.blit(board, (0, 0))
+    screen.fill("brown")
+    screen.blit(board, board_rect)
 
     pygame.display.flip()
     clock.tick(60)

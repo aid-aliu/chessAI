@@ -43,31 +43,64 @@ class Board:
             print(self.board[i])
 
 
-    def move_piece(self, row, col, row_move, col_move):
+    def try_move(self, row, col, row_move, col_move):
 
-        if row < 0 or row >= 8 or col < 0 or col >= 8:
-            print("Position out of bounds")
-            return False
-        if row_move < 0 or row_move >= 8 or col_move < 0 or col_move >= 8:
-            print("Position out of bounds")
+        if self.invalid_move_input(row, col, row_move, col_move):
             return False
 
+        if self.can_move_piece(row, col, row_move, col_move):
+            self.move_piece(row, col, row_move, col_move)
 
-        if (self.board[row][col] > 0 >= self.board[row_move][col_move]
-                and self.white_turn):
-            temp = self.board[row][col]
-            self.board[row_move][col_move] = temp
-            self.board[row][col] = 0
-            self.white_turn = False
-            return True
-
-        elif (self.board[row][col] < 0 <= self.board[row_move][col_move]
-              and not self.white_turn):
-            temp = self.board[row][col]
-            self.board[row_move][col_move] = temp
-            self.board[row][col] = 0
-            self.white_turn = True
+            #switch turns
+            if self.white_turn:
+                self.white_turn = False
+            else:
+                self.white_turn = True
             return True
 
         return False
 
+
+    def can_knight(self, row, col, row_move, col_move):
+
+        if row_move == row + 1 or row_move == row - 1:
+            if col_move == col + 2 or col_move == col - 2:
+                return True
+        elif col_move == col + 1 or col_move == col - 1:
+            if row_move == row + 2 or row_move == row - 2:
+                return True
+
+        return False
+
+
+
+    def invalid_move_input(self, row, col, row_move, col_move):
+
+        if row < 0 or row >= 8 or col < 0 or col >= 8:
+            print("Position out of bounds")
+            return True
+        if row_move < 0 or row_move >= 8 or col_move < 0 or col_move >= 8:
+            print("Position out of bounds")
+            return True
+
+        if self.board[row][col] == 0:
+            print("There is no piece located in that position")
+            return True
+
+        return False
+
+    def can_move_piece(self, row, col, row_move, col_move):
+        if (self.board[row][col] > 0 >= self.board[row_move][col_move]
+                and self.white_turn):
+            return True
+
+        elif (self.board[row][col] < 0 <= self.board[row_move][col_move]
+              and not self.white_turn):
+            return True
+
+        return False
+
+    def move_piece(self, row, col, row_move, col_move):
+        temp = self.board[row][col]
+        self.board[row_move][col_move] = temp
+        self.board[row][col] = 0

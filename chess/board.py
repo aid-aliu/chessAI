@@ -43,6 +43,7 @@ class Board:
             print(self.board[i])
 
 
+    # Main controller: validates the move, executes it if allowed, and switches turns
     def try_move(self, row, col, row_move, col_move):
 
         if self.invalid_move_input(row, col, row_move, col_move):
@@ -61,19 +62,7 @@ class Board:
         return False
 
 
-    def can_knight(self, row, col, row_move, col_move):
-
-        if row_move == row + 1 or row_move == row - 1:
-            if col_move == col + 2 or col_move == col - 2:
-                return True
-        elif col_move == col + 1 or col_move == col - 1:
-            if row_move == row + 2 or row_move == row - 2:
-                return True
-
-        return False
-
-
-
+    # Validates basic move input: ensures coordinates are on the board and source square contains a piece.
     def invalid_move_input(self, row, col, row_move, col_move):
 
         if row < 0 or row >= 8 or col < 0 or col >= 8:
@@ -89,6 +78,7 @@ class Board:
 
         return False
 
+    # Verifies the piece belongs to the player whose turn it is and the target square is not occupied by the same color.
     def can_move_piece(self, row, col, row_move, col_move):
         if (self.board[row][col] > 0 >= self.board[row_move][col_move]
                 and self.white_turn):
@@ -100,7 +90,68 @@ class Board:
 
         return False
 
+    # Updates the board by moving the piece from the source square to the destination square.
     def move_piece(self, row, col, row_move, col_move):
         temp = self.board[row][col]
         self.board[row_move][col_move] = temp
         self.board[row][col] = 0
+
+
+
+    # Checks if the requested move follows valid knight movement rules.
+    def can_knight(self, row, col, row_move, col_move):
+
+        if row_move == row + 1 or row_move == row - 1:
+            if col_move == col + 2 or col_move == col - 2:
+                return True
+        elif col_move == col + 1 or col_move == col - 1:
+            if row_move == row + 2 or row_move == row - 2:
+                return True
+
+        return False
+
+
+
+    # Checks if the requested move follows valid rook movement rules.
+    def can_rook(self, row, col, row_move, col_move):
+
+
+        i = 0
+
+        if row == row_move and col != col_move:
+            distance = col_move - col
+
+            if i < distance:
+                i = 1
+                while i <= distance - 1:
+                    if self.board[row][col + i] != 0:
+                        return False
+                    i += 1
+            elif i > distance:
+                i = -1
+                while i >= distance + 1:
+                    if self.board[row][col + i] != 0:
+                        return False
+                    i -= 1
+
+            return True
+
+        elif col == col_move and row != row_move:
+            distance = row_move - row
+
+            if i < distance:
+                i = 1
+                while i <= distance - 1:
+                    if self.board[row + i][col] != 0:
+                        return False
+                    i += 1
+            elif i > distance:
+                i = -1
+                while i >= distance + 1:
+                    if self.board[row + i][col] != 0:
+                        return False
+                    i -= 1
+
+            return True
+
+        return False

@@ -155,3 +155,49 @@ class Board:
             return True
 
         return False
+
+    def can_bishop(self, row, col, row_move, col_move):
+
+        #check diagonal
+        if abs(row_move - row) != abs(col_move - col):
+            return False
+
+        i = 0
+        distance = row_move - row
+
+        if col_move < col:
+
+            if i > distance:
+                i = -1
+
+                while i >= distance + 1:
+                    if self.board[row + i][col + i] != 0:
+                        return False
+                    i -= 1
+            elif i < distance:
+                i = 1
+
+                while i <= distance - 1:
+                    if self.board[row + i][col - i] != 0:
+                        return False
+                    i += 1
+            return True
+
+        elif col_move > col:
+
+            if i > distance:
+                i = -1
+
+                while i >= distance + 1:
+                    if self.board[row + i][col - i] != 0:
+                        return False
+                    i -= 1
+
+            elif i < distance:
+                i = 1
+
+                while i <= distance - 1:
+                    if self.board[row + i][col + i] != 0:
+                        return False
+                    i += 1
+            return True

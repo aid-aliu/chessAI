@@ -49,7 +49,7 @@ class Board:
         if self.invalid_move_input(row, col, row_move, col_move):
             return False
 
-        if self.can_move_piece(row, col, row_move, col_move):
+        if self.valid_turn_and_target(row, col, row_move, col_move):
             self.move_piece(row, col, row_move, col_move)
 
             #switch turns
@@ -79,7 +79,7 @@ class Board:
         return False
 
     # Verifies the piece belongs to the player whose turn it is and the target square is not occupied by the same color.
-    def can_move_piece(self, row, col, row_move, col_move):
+    def valid_turn_and_target(self, row, col, row_move, col_move):
         if (self.board[row][col] > 0 >= self.board[row_move][col_move]
                 and self.white_turn):
             return True
@@ -201,3 +201,11 @@ class Board:
                         return False
                     i += 1
             return True
+
+        return False
+
+
+    def can_queen(self, row, col, row_move, col_move):
+        if self.can_rook(row, col, row_move, col_move) or self.can_bishop(row, col, row_move, col_move):
+            return True
+        return False

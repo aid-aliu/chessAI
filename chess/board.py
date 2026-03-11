@@ -49,7 +49,7 @@ class Board:
         if self.invalid_move_input(row, col, row_move, col_move):
             return False
 
-        if self.valid_turn_and_target(row, col, row_move, col_move):
+        if self.valid_turn_and_target(row, col, row_move, col_move) and self.piece_type_valid_move(row, col, row_move, col_move):
             self.move_piece(row, col, row_move, col_move)
 
             #switch turns
@@ -208,4 +208,46 @@ class Board:
     def can_queen(self, row, col, row_move, col_move):
         if self.can_rook(row, col, row_move, col_move) or self.can_bishop(row, col, row_move, col_move):
             return True
+        return False
+
+    def can_king(self, row, col, row_move, col_move):
+
+        row_allow = (row_move == row - 1 or row_move == row + 1 or row_move == row)
+        col_allow = (col_move == col - 1 or col_move == col + 1 or col_move == col)
+
+        if row_move == row and col_move == col:
+            return False
+        if row_allow and col_allow:
+            return True
+        return False
+
+    """self.pawn = 1
+        self.rook = 2
+        self.knight = 3
+        self.bishop = 4
+        self.king = 5
+        self.queen = 6"""
+
+    def piece_type_valid_move(self, row, col, row_move, col_move):
+        if abs(self.board[row][col]) == 2:
+            if self.can_rook(row, col, row_move, col_move):
+                return True
+            return False
+        elif abs(self.board[row][col]) == 3:
+            if self.can_knight(row, col, row_move, col_move):
+                return True
+            return False
+        elif abs(self.board[row][col]) == 4:
+            if self.can_bishop(row, col, row_move, col_move):
+                return True
+            return False
+        elif abs(self.board[row][col]) == 6:
+            if self.can_queen(row, col, row_move, col_move):
+                return True
+            return False
+        elif abs(self.board[row][col]) == 5:
+            if self.can_king(row, col, row_move, col_move):
+                return True
+            return False
+
         return False

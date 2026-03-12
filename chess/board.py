@@ -221,16 +221,53 @@ class Board:
             return True
         return False
 
-    """self.pawn = 1
-        self.rook = 2
-        self.knight = 3
-        self.bishop = 4
-        self.king = 5
-        self.queen = 6"""
+
+    def can_pawn(self, row, col, row_move, col_move):
+
+
+
+        #pawns at the start of the board
+        if row == 1 and col_move == col and row_move <= 3 and row_move > 1:
+            if row_move == row + 1 and self.board[row_move][col_move] == 0:
+                return True
+            elif row_move == row + 2 and self.board[row_move][col_move] == 0 and self.board[row + 1][col] == 0:
+                return True
+            return False
+        elif row == 6 and col_move == col and row_move >= 4 and row_move < 6:
+            if row_move == row - 1 and self.board[row_move][col_move] == 0:
+                return True
+            elif row_move == row - 2 and self.board[row - 1][col_move] == 0 and self.board[row_move][col_move] == 0:
+                return True
+            return False
+
+        #pawns moving 1 block forward
+        if row_move == row + 1  and self.board[row][col] == -1 and self.board[row_move][col_move] == 0 and col_move == col:
+            return True
+        elif row_move == row - 1  and self.board[row][col] == 1 and self.board[row_move][col_move] == 0 and col_move == col:
+            return True
+
+        #pawns moving diagonally when taking another piece
+        if self.board[row_move][col_move] > 0 and row_move == row + 1 and (col_move == col + 1 or col_move == col - 1):
+            return True
+        elif self.board[row_move][col_move] < 0 and row_move == row - 1 and (col_move == col + 1 or col_move == col - 1):
+            return True
+
+        return False
+
+    """     pawn = 1
+            rook = 2
+            knight = 3
+            bishop = 4
+            king = 5
+            queen = 6   """
 
     def piece_type_valid_move(self, row, col, row_move, col_move):
         if abs(self.board[row][col]) == 2:
             if self.can_rook(row, col, row_move, col_move):
+                return True
+            return False
+        elif abs(self.board[row][col]) == 1:
+            if self.can_pawn(row, col, row_move, col_move):
                 return True
             return False
         elif abs(self.board[row][col]) == 3:

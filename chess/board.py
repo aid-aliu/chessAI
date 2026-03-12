@@ -276,6 +276,19 @@ class Board:
             king = 5
             queen = 6   """
 
+
+    """
+    1. Detect **check**
+    2. Reject moves that **leave your king in check**   
+    3. Prevent **king moving into check**
+    4. Implement **legal move generation for a side**
+    5. Detect **checkmate**
+    6. Detect **stalemate**
+    7. Implement **castling**
+    8. Implement **en passant**
+    9. Add **move history**
+"""
+
     def piece_type_valid_move(self, row, col, row_move, col_move):
         if abs(self.board[row][col]) == 2:
             if self.can_rook(row, col, row_move, col_move):

@@ -52,6 +52,9 @@ class Board:
         if self.valid_turn_and_target(row, col, row_move, col_move) and self.piece_type_valid_move(row, col, row_move, col_move):
             self.move_piece(row, col, row_move, col_move)
 
+            #check a pawn for promotion
+            self.pawn_promotion(row_move, col_move)
+
             #switch turns
             if self.white_turn:
                 self.white_turn = False
@@ -221,10 +224,22 @@ class Board:
             return True
         return False
 
+    def pawn_promotion(self, row_move, col_move):
+        if (row_move == 0 and self.board[row_move][col_move] == 1) or (row_move == 7 and self.board[row_move][col_move] == -1):
+            while True:
+                promotion = input("Turn pawn into (2)-rook, (3)-knight, (4)-bishop, (6)-queen")
+                if promotion not in ["2", "3", "4", "6"]:
+                    print("Invalid input")
+                else:
+                    if self.board[row_move][col_move] == 1:
+                        self.board[row_move][col_move] = int(promotion[0])
+                        return True
+                    else:
+                        self.board[row_move][col_move] = -int(promotion[0])
+                        return True
+
 
     def can_pawn(self, row, col, row_move, col_move):
-
-
 
         #pawns at the start of the board
         if row == 1 and col_move == col and row_move <= 3 and row_move > 1:

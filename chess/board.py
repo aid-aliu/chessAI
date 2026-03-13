@@ -224,20 +224,6 @@ class Board:
             return True
         return False
 
-    def pawn_promotion(self, row_move, col_move):
-        if (row_move == 0 and self.board[row_move][col_move] == 1) or (row_move == 7 and self.board[row_move][col_move] == -1):
-            while True:
-                promotion = input("Turn pawn into (2)-rook, (3)-knight, (4)-bishop, (6)-queen")
-                if promotion not in ["2", "3", "4", "6"]:
-                    print("Invalid input")
-                else:
-                    if self.board[row_move][col_move] == 1:
-                        self.board[row_move][col_move] = int(promotion[0])
-                        return True
-                    else:
-                        self.board[row_move][col_move] = -int(promotion[0])
-                        return True
-
 
     def can_pawn(self, row, col, row_move, col_move):
 
@@ -269,6 +255,21 @@ class Board:
 
         return False
 
+    def pawn_promotion(self, row_move, col_move):
+        if (row_move == 0 and self.board[row_move][col_move] == 1) or (
+                row_move == 7 and self.board[row_move][col_move] == -1):
+            while True:
+                promotion = input("Turn pawn into (2)-rook, (3)-knight, (4)-bishop, (6)-queen")
+                if promotion not in ["2", "3", "4", "6"]:
+                    print("Invalid input")
+                else:
+                    if self.board[row_move][col_move] == 1:
+                        self.board[row_move][col_move] = int(promotion[0])
+                        return True
+                    else:
+                        self.board[row_move][col_move] = -int(promotion[0])
+                        return True
+
     """     pawn = 1
             rook = 2
             knight = 3
@@ -288,6 +289,7 @@ class Board:
     8. Implement **en passant**
     9. Add **move history**
 """
+
 
     def piece_type_valid_move(self, row, col, row_move, col_move):
         if abs(self.board[row][col]) == 2:
@@ -316,3 +318,41 @@ class Board:
             return False
 
         return False
+
+    """Check methods and check logic implementation"""
+
+    def find_king(self):
+
+        king = 5 if self.white_turn else -5
+
+
+        for i in range(8):
+            for j in range(8):
+                if self.board[i][j] == king:
+                    king_row = i
+                    king_col = j
+                    return [king_row, king_col]
+
+    def knight_check(self):
+        king_row, king_col = self.find_king()
+
+
+
+
+
+    def check(self):
+        """nese u bo ni levizje prej tbardhes, kqyre mbretin e zi or vice versa"""
+        """kqyre diagnoalisht a po sulomhet mbreti prej naj bishopi ose mbretreshe(rruga prej mbretit te bishopi duhet me kon e paster, so square = 0"""
+        """kqyre ne form kryqi njejt per rook ose mbretresh"""
+        """kqyre ne diagonalet afer mbretit mos osht pawn"""
+        """nese njona prej qytyne plotsohet, dije qe osht check"""
+        """per knights as well, edhe kqyre mos e le mbrtin e zi me kon 1 row ose 1 column afer te bardhit, duhet me pas 1 square distance mes dyve gjith"""
+
+
+
+        #checks if the white king is checked on it's own turn
+
+
+
+
+

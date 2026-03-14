@@ -321,6 +321,22 @@ class Board:
 
     """Check methods and check logic implementation"""
 
+    def check(self):
+        """nese u bo ni levizje prej tbardhes, kqyre mbretin e zi or vice versa"""
+        """kqyre diagnoalisht a po sulomhet mbreti prej naj bishopi ose mbretreshe(rruga prej mbretit te bishopi duhet me kon e paster, so square = 0"""
+        """kqyre ne form kryqi njejt per rook ose mbretresh"""
+        """kqyre ne diagonalet afer mbretit mos osht pawn"""
+        """nese njona prej qytyne plotsohet, dije qe osht check"""
+        """per knights as well, edhe kqyre mos e le mbrtin e zi me kon 1 row ose 1 column afer te bardhit, duhet me pas 1 square distance mes dyve gjith"""
+
+
+        if self.knight_check():
+            return True
+        elif self.rook_check():
+            return True
+
+        #checks if the white king is checked on it's own turn
+
     def find_king(self):
 
         king = 5 if self.white_turn else -5
@@ -336,21 +352,149 @@ class Board:
     def knight_check(self):
         king_row, king_col = self.find_king()
 
+        knight_moves = [
+            (2, 1), (2, -1), (-2, 1), (-2, -1),
+            (1, 2), (1, -2), (-1, 2), (-1, -2)
+        ]
+        if self.board[king_row][king_col] == 5:
+            for row, column in knight_moves:
+                if 0 <= king_row + row < 8 and 0 <= king_col + column < 8:
+                    if self.board[king_row + row][king_col + column] == -3:
+                        return True
+        elif self.board[king_row][king_col] == -5:
+            for row, column in knight_moves:
+                if 0 <= king_row + row < 8 and 0 <= king_col + column < 8:
+                    if self.board[king_row + row][king_col + column] == 3:
+                        return True
+        return False
+
+    def rook_check(self):
+
+        king_row, king_col = self.find_king()
+
+        val1 = True
+        val2 = True
+        val3 = True
+        val4 = True
+
+
+        i_down, k_right, j_up, l_left = 1, 1, 1, 1
+
+        if self.board[king_row][king_col] == 5:
+
+            while True:
+                # right
+                if king_col + k_right < 8 and val1:
+                    if self.board[king_row][king_col + k_right] == -2 or self.board[king_row][king_col + k_right] == -6:
+                        return True
+                    elif self.board[king_row][king_col + k_right] == 0:
+                        k_right += 1
+                    else:
+                        val1 = False
+
+                elif val1:
+                    val1 = False
+
+                # left
+                if 0 <= king_col - l_left and val2:
+                    if self.board[king_row][king_col - l_left] == -2 or self.board[king_row][king_col - l_left] == -6:
+                        return True
+                    elif self.board[king_row][king_col - l_left] == 0:
+                        l_left += 1
+                    else:
+                        val2 = False
+
+                elif val2:
+                    val2 = False
+
+                # down
+                if king_row + i_down < 8 and val3:
+                    if self.board[king_row + i_down][king_col] == -2 or self.board[king_row + i_down][king_col] == -6:
+                        return True
+                    elif self.board[king_row + i_down][king_col] == 0:
+                        i_down += 1
+                    else:
+                        val3 = False
+
+                elif val3:
+                    val3 = False
+
+                # up
+                if 0 <= king_row - j_up and val4:
+                    if self.board[king_row - j_up][king_col] == -2 or self.board[king_row - j_up][king_col] == -6:
+                        return True
+                    elif self.board[king_row - j_up][king_col] == 0:
+                        j_up += 1
+                    else:
+                        val4 = False
+
+                elif val4:
+                    val4 = False
+
+                if not val1 and not val2 and not val3 and not val4:
+                    return False
+
+        elif self.board[king_row][king_col] == -5:
+
+            while True:
+                # right
+                if king_col + k_right < 8 and val1:
+                    if self.board[king_row][king_col + k_right] == 2 or self.board[king_row][king_col + k_right] == 6:
+                        return True
+                    elif self.board[king_row][king_col + k_right] == 0:
+                        k_right += 1
+                    else:
+                        val1 = False
+
+                elif val1:
+                    val1 = False
+
+
+                # left
+                if 0 <= king_col - l_left and val2:
+                    if self.board[king_row][king_col - l_left] == 2 or self.board[king_row][king_col - l_left] == 6:
+                        return True
+                    elif self.board[king_row][king_col - l_left] == 0:
+                        l_left += 1
+                    else:
+                        val2 = False
+                elif val2:
+                    val2 = False
+
+                # down
+                if king_row + i_down < 8 and val3:
+                    if self.board[king_row + i_down][king_col] == 2 or self.board[king_row + i_down][king_col] == 6:
+                        return True
+                    elif self.board[king_row + i_down][king_col] == 0:
+                        i_down += 1
+                    else:
+                        val3 = False
+
+                elif val3:
+                    val3 = False
+
+                # up
+                if 0 <= king_row - j_up and val4:
+                    if self.board[king_row - j_up][king_col] == 2 or self.board[king_row - j_up][king_col] == 6:
+                        return True
+                    elif self.board[king_row - j_up][king_col] == 0:
+                        j_up += 1
+                    else:
+                        val4 = False
+
+                elif val4:
+                    val4 = False
+
+
+                if not val1 and not val2 and not val3 and not val4:
+                    return False
+
+        return False
 
 
 
 
-    def check(self):
-        """nese u bo ni levizje prej tbardhes, kqyre mbretin e zi or vice versa"""
-        """kqyre diagnoalisht a po sulomhet mbreti prej naj bishopi ose mbretreshe(rruga prej mbretit te bishopi duhet me kon e paster, so square = 0"""
-        """kqyre ne form kryqi njejt per rook ose mbretresh"""
-        """kqyre ne diagonalet afer mbretit mos osht pawn"""
-        """nese njona prej qytyne plotsohet, dije qe osht check"""
-        """per knights as well, edhe kqyre mos e le mbrtin e zi me kon 1 row ose 1 column afer te bardhit, duhet me pas 1 square distance mes dyve gjith"""
 
-
-
-        #checks if the white king is checked on it's own turn
 
 
 

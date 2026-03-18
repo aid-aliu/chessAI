@@ -334,6 +334,10 @@ class Board:
             return True
         elif self.rook_check():
             return True
+        elif self.bishop_check():
+            return True
+        elif self.pawn_check()
+            return True
 
         #checks if the white king is checked on it's own turn
 
@@ -490,6 +494,138 @@ class Board:
                     return False
 
         return False
+
+
+    def bishop_check(self):
+
+        king_row, king_col = self.find_king()
+
+        i = 1
+
+        #use 4 seperate loops instead of 1 giant one
+
+
+        if self.board[king_row][king_col] == -5:
+            # right down
+            while 0 <= king_row + i < 8 and 0 <= king_col + i < 8:
+                if self.board[king_row + i][king_col + i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row + i][king_col + i] == 4 or self.board[king_row + i][king_col + i] == 6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # right up
+            while 0 <= king_row - i < 8 and 0 <= king_col + i < 8:
+                if self.board[king_row - i][king_col + i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row - i][king_col + i] == 4 or self.board[king_row - i][king_col + i] == 6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # left up
+            while 0 <= king_row - i < 8 and 0 <= king_col - i < 8:
+                if self.board[king_row - i][king_col - i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row - i][king_col - i] == 4 or self.board[king_row - i][king_col - i] == 6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # left down
+            while 0 <= king_row + i < 8 and 0 <= king_col - i < 8:
+                if self.board[king_row + i][king_col - i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row + i][king_col - i] == 4 or self.board[king_row + i][king_col - i] == 6:
+                    return True
+                else:
+                    break
+
+
+        elif self.board[king_row][king_col] == 5:
+
+            # right down
+            while 0 <= king_row + i < 8 and 0 <= king_col + i < 8:
+                if self.board[king_row + i][king_col + i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row + i][king_col + i] == -4 or self.board[king_row + i][king_col + i] == -6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # right up
+            while 0 <= king_row - i < 8 and 0 <= king_col + i < 8:
+                if self.board[king_row - i][king_col + i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row - i][king_col + i] == -4 or self.board[king_row - i][king_col + i] == -6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # left up
+            while 0 <= king_row - i < 8 and 0 <= king_col - i < 8:
+                if self.board[king_row - i][king_col - i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row - i][king_col - i] == -4 or self.board[king_row - i][king_col - i] == -6:
+                    return True
+                else:
+                    break
+
+            i = 1
+            # left down
+            while 0 <= king_row + i < 8 and 0 <= king_col - i < 8:
+                if self.board[king_row + i][king_col - i] == 0:
+                    i += 1
+                    continue
+                elif self.board[king_row + i][king_col - i] == -4 or self.board[king_row + i][king_col - i] == -6:
+                    return True
+                else:
+                    break
+
+        return False
+
+
+
+    def pawn_check(self):
+
+        king_row, king_col = self.find_king()
+
+
+
+        if self.board[king_row][king_col] == -5:
+            if 0 <= king_row + 1 < 8:
+                if 0 <= king_col + 1 < 8:
+                     if self.board[king_row + 1][king_col + 1] == 1:
+                        return True
+                if 0 <= king_col - 1 < 8:
+                     if self.board[king_row + 1][king_col - 1] == 1:
+                         return True
+
+        elif self.board[king_row][king_col] == 5:
+            if 0 <= king_row - 1 < 8:
+                if 0 <= king_col + 1 < 8:
+                    if self.board[king_row - 1][king_col + 1] == -1:
+                        return True
+                if 0 <= king_col - 1 < 8:
+                    if self.board[king_row - 1][king_col - 1] == -1:
+                        return True
+
+        return False
+
+
 
 
 

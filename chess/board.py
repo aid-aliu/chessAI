@@ -336,7 +336,7 @@ class Board:
             return True
         elif self.bishop_check():
             return True
-        elif self.pawn_check()
+        elif self.pawn_check():
             return True
 
         #checks if the white king is checked on it's own turn

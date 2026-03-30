@@ -1,7 +1,8 @@
+import copy
+
 class Board:
     def __init__(self):
         self.board = [[0 for i in range(8)] for j in range(8)]
-
         self.pawn = 1
         self.rook = 2
         self.knight = 3
@@ -46,14 +47,22 @@ class Board:
     # Main controller: validates the move, executes it if allowed, and switches turns
     def try_move(self, row, col, row_move, col_move):
 
+        self.board_previous = copy.deepcopy(self.board)
+
         if self.invalid_move_input(row, col, row_move, col_move):
             return False
 
         if self.valid_turn_and_target(row, col, row_move, col_move) and self.piece_type_valid_move(row, col, row_move, col_move):
             self.move_piece(row, col, row_move, col_move)
 
+            # check() is used to test whether the move leaves the current side's king under attack; if yes, the move is illegal
+            if self.check():
+                self.board = copy.deepcopy(self.board_previous)
+                return False
+
             #check a pawn for promotion
             self.pawn_promotion(row_move, col_move)
+
 
             #switch turns
             if self.white_turn:
@@ -338,6 +347,10 @@ class Board:
             return True
         elif self.pawn_check():
             return True
+        elif self.king_adjacency_check():
+            return True
+
+        return False
 
         #checks if the white king is checked on it's own turn
 
@@ -621,6 +634,29 @@ class Board:
                         return True
                 if 0 <= king_col - 1 < 8:
                     if self.board[king_row - 1][king_col - 1] == -1:
+                        return True
+
+        return False
+
+    def king_adjacency_check(self):
+
+        king_row, king_col = self.find_king()
+
+        king_moves = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1), (0, 1),
+            (1, -1), (1, 0), (1, 1)
+        ]
+
+        if self.board[king_row][king_col] == -5:
+            for row, col in king_moves:
+                if 0 <= king_row + row < 8 and 0 <= king_col + col < 8:
+                    if self.board[king_row + row][king_col + col] == 5:
+                        return True
+        elif self.board[king_row][king_col] == 5:
+            for row, col in king_moves:
+                if 0 <= king_row + row < 8 and 0 <= king_col + col < 8:
+                    if self.board[king_row + row][king_col + col] == -5:
                         return True
 
         return False

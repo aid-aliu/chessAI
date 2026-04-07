@@ -1,0 +1,11 @@
+Build legal move generation. For the side to move, find all pieces and all moves that remain legal after your current try_move logic. This is the foundation for the rest.
+Implement checkmate and stalemate. Once legal move generation exists: no legal moves + in check = checkmate, no legal moves + not in check = stalemate.
+
+what is unfinished:
+
+legal move generation
+checkmate
+stalemate
+castling
+en passant
+move history

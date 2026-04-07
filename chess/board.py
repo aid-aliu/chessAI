@@ -74,6 +74,171 @@ class Board:
         return False
 
 
+
+
+    def is_legal_move(self, row, col, row_move, col_move):
+
+        current_board = copy.deepcopy(self.board)
+        current_turn = self.white_turn
+
+        result = self.try_move(row, col, row_move, col_move)
+
+        self.board = current_board
+        self.white_turn = current_turn
+
+        return result
+
+    """     pawn = 1
+                rook = 2
+                knight = 3
+                bishop = 4
+                king = 5
+                queen = 6   """
+
+    def get_legal_moves(self):
+        legal_moves = []
+        for i in range(8):
+            for j in range(8):
+                piece = self.board[i][j]
+
+                if piece == 0:
+                    continue
+                if self.white_turn and piece < 0:
+                    continue
+                if not self.white_turn and piece > 0:
+                    continue
+
+                piece_type = abs(piece)
+
+                if piece_type == 1:
+                    legal_moves.extend(self.generate_pawn_legal_moves(i, j))
+                elif piece_type == 2:
+                    legal_moves.extend(self.generate_rook_legal_moves(i, j))
+                elif piece_type == 3:
+                    legal_moves.extend(self.generate_knight_legal_moves(i, j))
+                elif piece_type == 4:
+                    legal_moves.extend(self.generate_bishop_legal_moves(i, j))
+                elif piece_type == 5:
+                    legal_moves.extend(self.generate_king_legal_moves(i, j))
+                elif piece_type == 6:
+                    legal_moves.extend(self.generate_queen_legal_moves(i, j))
+
+        return legal_moves
+
+    def generate_knight_legal_moves(self, row, col):
+        knight_legal = []
+        knight_moves = [
+            (2, 1), (2, -1), (-2, 1), (-2, -1),
+            (1, 2), (1, -2), (-1, 2), (-1, -2)
+        ]
+
+        for i, j in knight_moves:
+            if self.is_legal_move(row, col, row + i, col + j):
+                knight_legal.append((row, col, row + i, col + j))
+
+        return knight_legal
+
+    def generate_king_legal_moves(self, row, col):
+
+        king_legal = []
+
+        king_moves = [
+            (-1, -1), (-1, 0), (-1, 1),
+            (0, -1), (0, 1),
+            (1, -1), (1, 0), (1, 1)
+        ]
+
+        for i, j in king_moves:
+            if self.is_legal_move(row, col, row + i, col + j):
+                king_legal.append((row, col, row + i, col + j))
+        return king_legal
+
+    def generate_bishop_legal_moves(self, row, col):
+
+        bishop_legal = []
+
+        for i in range(1, 8):
+
+            if self.is_legal_move(row, col, row + i, col + i):
+                bishop_legal.append((row, col,row + i, col + i))
+
+            if self.is_legal_move(row, col, row + i, col - i):
+                bishop_legal.append((row, col,row + i, col - i))
+
+            if self.is_legal_move(row, col, row - i, col + i):
+                bishop_legal.append((row, col,row - i, col + i))
+
+            if self.is_legal_move(row, col, row - i, col - i):
+                bishop_legal.append((row, col, row - i, col - i))
+
+        return bishop_legal
+
+    def generate_rook_legal_moves(self, row, col):
+
+        rook_legal = []
+
+        for i in range(1, 8):
+            if self.is_legal_move(row, col, row, col + i):
+                rook_legal.append((row, col, row, col + i))
+
+            if self.is_legal_move(row, col, row, col - i):
+                rook_legal.append((row, col, row, col - i))
+
+            if self.is_legal_move(row, col, row - i, col):
+                rook_legal.append((row, col, row - i, col))
+
+            if self.is_legal_move(row, col, row + i, col):
+                rook_legal.append((row, col, row + i, col))
+
+        return rook_legal
+
+
+    def generate_queen_legal_moves(self, row, col):
+        return self.generate_rook_legal_moves(row, col) + self.generate_bishop_legal_moves(row, col)
+
+    def generate_pawn_legal_moves(self, row, col):
+
+        pawn_legal = []
+
+        if self.board[row][col] == -1 and row == 1:
+            if self.is_legal_move(row, col, row + 2, col):
+                pawn_legal.append((row, col, row + 2, col))
+            if self.is_legal_move(row, col, row + 1, col):
+                pawn_legal.append((row, col, row + 1, col))
+            if self.is_legal_move(row, col, row + 1, col - 1):
+                pawn_legal.append((row, col, row + 1, col - 1))
+            if self.is_legal_move(row, col, row + 1, col + 1):
+                pawn_legal.append((row, col, row + 1, col + 1))
+
+        elif self.board[row][col] == 1 and row == 6:
+            if self.is_legal_move(row, col, row - 2, col):
+                pawn_legal.append((row, col, row - 2, col))
+            if self.is_legal_move(row, col, row - 1, col):
+                pawn_legal.append((row, col, row - 1, col))
+            if self.is_legal_move(row, col, row - 1, col - 1):
+                pawn_legal.append((row, col, row - 1, col - 1))
+            if self.is_legal_move(row, col, row - 1, col + 1):
+                pawn_legal.append((row, col, row - 1, col + 1))
+
+        elif self.board[row][col] == -1 and row != 1:
+            if self.is_legal_move(row, col, row + 1, col):
+                pawn_legal.append((row, col, row + 1, col))
+            if self.is_legal_move(row, col, row + 1, col - 1):
+                pawn_legal.append((row, col, row + 1, col - 1))
+            if self.is_legal_move(row, col, row + 1, col + 1):
+                pawn_legal.append((row, col, row + 1, col + 1))
+
+        elif self.board[row][col] == 1 and row != 6:
+            if self.is_legal_move(row, col, row - 1, col):
+                pawn_legal.append((row, col, row - 1, col))
+            if self.is_legal_move(row, col, row - 1, col - 1):
+                pawn_legal.append((row, col, row - 1, col - 1))
+            if self.is_legal_move(row, col, row - 1, col + 1):
+                pawn_legal.append((row, col, row - 1, col + 1))
+
+        return pawn_legal
+
+
     # Validates basic move input: ensures coordinates are on the board and source square contains a piece.
     def invalid_move_input(self, row, col, row_move, col_move):
 
@@ -279,12 +444,7 @@ class Board:
                         self.board[row_move][col_move] = -int(promotion[0])
                         return True
 
-    """     pawn = 1
-            rook = 2
-            knight = 3
-            bishop = 4
-            king = 5
-            queen = 6   """
+
 
 
     """
@@ -660,8 +820,6 @@ class Board:
                         return True
 
         return False
-
-
 
 
 

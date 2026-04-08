@@ -13,6 +13,15 @@ class Board:
         #black turn is when white_turn is false
         self.white_turn = True
 
+        #flags for castling
+        self.white_king_moved = False
+        self.black_king_moved = False
+        self.white_king_rook = False
+        self.white_queen_rook = False
+        self.black_queen_rook = False
+        self.black_king_rook = False
+
+
         # pawns
         for i in range(8):
             self.board[1][i] = -self.pawn
@@ -55,10 +64,35 @@ class Board:
         if self.valid_turn_and_target(row, col, row_move, col_move) and self.piece_type_valid_move(row, col, row_move, col_move):
             self.move_piece(row, col, row_move, col_move)
 
+
             # check() is used to test whether the move leaves the current side's king under attack; if yes, the move is illegal
             if self.check():
                 self.board = copy.deepcopy(self.board_previous)
                 return False
+
+            #Check for flags
+            if self.white_turn:
+                if row == 7 and col == 0:
+                    self.white_queen_rook = True
+                if row == 7 and col == 7:
+                    self.white_king_rook = True
+                if row == 7 and col == 4:
+                    self.white_king_moved = True
+                if row_move == 0 and col_move == 0:
+                    self.black_queen_rook = True
+                if row_move == 0 and col_move == 7:
+                    self.black_king_rook = True
+            else:
+                if row == 0 and col == 0:
+                    self.black_queen_rook = True
+                if row == 0 and col == 7:
+                    self.black_king_rook = True
+                if row == 0 and col == 4:
+                    self.black_king_moved = True
+                if row_move == 7 and col_move == 0:
+                    self.white_queen_rook = True
+                if row_move == 7 and col_move == 7:
+                    self.white_king_rook = True
 
             #check a pawn for promotion
             self.pawn_promotion(row_move, col_move)
@@ -73,7 +107,31 @@ class Board:
 
         return False
 
+    def checkmate(self):
 
+        if self.check() and not self.get_legal_moves():
+            return True
+        return False
+
+    def stalemate(self):
+
+        if not self.check() and not self.get_legal_moves():
+            return True
+        return False
+
+    #castling:
+    """
+    King has never moved
+    Chosen rook has never moved / not captured
+    King is not currently in check
+    All squares between king and rook are empty
+    King does not pass through an attacked square
+    King does not land on an attacked square
+    
+    """
+
+    def can_castle(self):
+        return None
 
 
     def is_legal_move(self, row, col, row_move, col_move):
@@ -243,14 +301,14 @@ class Board:
     def invalid_move_input(self, row, col, row_move, col_move):
 
         if row < 0 or row >= 8 or col < 0 or col >= 8:
-            print("Position out of bounds")
+            #print("Position out of bounds")
             return True
         if row_move < 0 or row_move >= 8 or col_move < 0 or col_move >= 8:
-            print("Position out of bounds")
+            #print("Position out of bounds")
             return True
 
         if self.board[row][col] == 0:
-            print("There is no piece located in that position")
+            #print("There is no piece located in that position")
             return True
 
         return False

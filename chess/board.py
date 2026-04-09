@@ -130,8 +130,111 @@ class Board:
     
     """
 
-    def can_castle(self):
-        return None
+    def can_castle(self, kingside):
+
+        if self.white_turn:
+            if kingside:
+                if not self.white_king_moved and not self.white_king_rook:
+                    if not self.check():
+                        if self.board[7][5] == 0 and self.board[7][6] == 0:
+                            self.board[7][5] = self.king
+                            self.board[7][4] = 0
+                            if self.check():
+                                self.board[7][4] = self.king
+                                self.board[7][5] = 0
+                                return False
+                            self.board[7][5] = 0
+                            self.board[7][6] = self.king
+                            self.board[7][4] = 0
+                            if self.check():
+                                self.board[7][6] = 0
+
+                                self.board[7][4] = self.king
+                                return False
+                            self.board[7][6] = 0
+                            self.board[7][4] = self.king
+
+                            return True
+            else:
+                if not self.white_king_moved and not self.white_queen_rook:
+                    if not self.check():
+                        if self.board[7][1] == 0 and self.board[7][2] == 0 and self.board[7][3] == 0:
+
+
+                            self.board[7][4] = 0
+                            self.board[7][2] = self.king
+
+                            if self.check():
+                                self.board[7][2] = 0
+                                self.board[7][4] = self.king
+                                return False
+                            self.board[7][2] = 0
+                            self.board[7][3] = self.king
+
+                            if self.check():
+                                self.board[7][3] = 0
+                                self.board[7][4] = self.king
+                                return False
+                            self.board[7][4] = self.king
+                            self.board[7][3] = 0
+
+                            return True
+            return False
+        else:
+            if kingside:
+                if not self.black_king_moved and not self.black_king_rook:
+                    if not self.check():
+                        if self.board[0][5] == 0 and self.board[0][6] == 0:
+                            self.board[0][5] = -self.king
+                            self.board[0][4] = 0
+                            if self.check():
+                                self.board[0][4] = -self.king
+                                self.board[0][5] = 0
+                                return False
+                            self.board[0][5] = 0
+                            self.board[0][6] = -self.king
+                            self.board[0][4] = 0
+                            if self.check():
+                                self.board[0][6] = 0
+
+                                self.board[0][4] = -self.king
+                                return False
+                            self.board[0][6] = 0
+                            self.board[0][4] = -self.king
+
+                            return True
+
+            else:
+                if not self.black_king_moved and not self.black_queen_rook:
+                    if not self.check():
+                        if self.board[0][1] == 0 and self.board[0][2] == 0 and self.board[0][3] == 0:
+
+                            self.board[0][4] = 0
+                            self.board[0][2] = -self.king
+
+                            if self.check():
+                                self.board[0][2] = 0
+                                self.board[0][4] = -self.king
+                                return False
+                            self.board[0][2] = 0
+                            self.board[0][3] = -self.king
+
+                            if self.check():
+                                self.board[0][3] = 0
+                                self.board[0][4] = -self.king
+                                return False
+                            self.board[0][4] = -self.king
+                            self.board[0][3] = 0
+
+                            return True
+                return False
+
+            return False
+
+
+
+
+
 
 
     def is_legal_move(self, row, col, row_move, col_move):

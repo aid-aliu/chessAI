@@ -97,15 +97,50 @@ class Board:
             #check a pawn for promotion
             self.pawn_promotion(row_move, col_move)
 
-
-            #switch turns
+            # switch turns
             if self.white_turn:
                 self.white_turn = False
             else:
                 self.white_turn = True
             return True
 
+        elif self.white_turn and (row == 7 and col == 4 and row_move == 7 and (col_move == 6 or
+            col_move == 2) and self.board[7][4] == self.king):
+
+            if col_move == 6:
+                if self.can_castle(True):
+                    self.move_piece(7, 4, 7,6)
+                    self.move_piece(7, 7, 7,5)
+                    self.white_turn = False
+                    return True
+            elif col_move == 2:
+                if self.can_castle(False):
+                    self.move_piece(7, 4, 7, 2)
+                    self.move_piece(7, 0, 7, 3)
+                    self.white_turn = False
+                    return True
+
+        elif not self.white_turn and (row == 0 and col == 4 and row_move == 0 and (col_move == 6 or
+            col_move == 2) and self.board[0][4] == -self.king):
+
+            if col_move == 6:
+                if self.can_castle(True):
+                    self.move_piece(0, 4, 0,6)
+                    self.move_piece(0, 7, 0,5)
+                    self.white_turn = True
+                    return True
+            elif col_move == 2:
+                if self.can_castle(False):
+                    self.move_piece(0, 4, 0, 2)
+                    self.move_piece(0, 0, 0, 3)
+                    self.white_turn = True
+                    return True
         return False
+
+
+
+
+
 
     def checkmate(self):
 

@@ -111,12 +111,16 @@ class Board:
                 if self.can_castle(True):
                     self.move_piece(7, 4, 7,6)
                     self.move_piece(7, 7, 7,5)
+                    self.white_king_moved = True
+                    self.white_king_rook = True
                     self.white_turn = False
                     return True
             elif col_move == 2:
                 if self.can_castle(False):
                     self.move_piece(7, 4, 7, 2)
                     self.move_piece(7, 0, 7, 3)
+                    self.white_king_moved = True
+                    self.white_queen_rook = True
                     self.white_turn = False
                     return True
 
@@ -127,12 +131,16 @@ class Board:
                 if self.can_castle(True):
                     self.move_piece(0, 4, 0,6)
                     self.move_piece(0, 7, 0,5)
+                    self.black_king_moved = True
+                    self.black_king_rook = True
                     self.white_turn = True
                     return True
             elif col_move == 2:
                 if self.can_castle(False):
                     self.move_piece(0, 4, 0, 2)
                     self.move_piece(0, 0, 0, 3)
+                    self.black_king_moved = True
+                    self.black_queen_rook = True
                     self.white_turn = True
                     return True
         return False
@@ -169,7 +177,7 @@ class Board:
 
         if self.white_turn:
             if kingside:
-                if not self.white_king_moved and not self.white_king_rook:
+                if not self.white_king_moved and not self.white_king_rook and self.board[7][7] == self.rook and self.board[7][4] == self.king:
                     if not self.check():
                         if self.board[7][5] == 0 and self.board[7][6] == 0:
                             self.board[7][5] = self.king
@@ -193,7 +201,7 @@ class Board:
             else:
                 if not self.white_king_moved and not self.white_queen_rook:
                     if not self.check():
-                        if self.board[7][1] == 0 and self.board[7][2] == 0 and self.board[7][3] == 0:
+                        if self.board[7][1] == 0 and self.board[7][2] == 0 and self.board[7][3] == 0 and self.board[7][0] == self.rook and self.board[7][4] == self.king:
 
 
                             self.board[7][4] = 0
@@ -219,7 +227,7 @@ class Board:
             if kingside:
                 if not self.black_king_moved and not self.black_king_rook:
                     if not self.check():
-                        if self.board[0][5] == 0 and self.board[0][6] == 0:
+                        if self.board[0][5] == 0 and self.board[0][6] == 0 and self.board[0][7] == -self.rook and self.board[0][4] == -self.king:
                             self.board[0][5] = -self.king
                             self.board[0][4] = 0
                             if self.check():
@@ -242,7 +250,7 @@ class Board:
             else:
                 if not self.black_king_moved and not self.black_queen_rook:
                     if not self.check():
-                        if self.board[0][1] == 0 and self.board[0][2] == 0 and self.board[0][3] == 0:
+                        if self.board[0][1] == 0 and self.board[0][2] == 0 and self.board[0][3] == 0 and self.board[0][0] == -self.rook and self.board[0][4] == -self.king:
 
                             self.board[0][4] = 0
                             self.board[0][2] = -self.king
@@ -277,10 +285,24 @@ class Board:
         current_board = copy.deepcopy(self.board)
         current_turn = self.white_turn
 
+        white_king_temp = self.white_king_moved
+        black_king_temp = self.black_king_moved
+        white_king_rook_temp = self.white_king_rook
+        white_queen_rook_temp = self.white_queen_rook
+        black_queen_rook_temp = self.black_queen_rook
+        black_king_rook_temp = self.black_king_rook
+
         result = self.try_move(row, col, row_move, col_move)
 
         self.board = current_board
         self.white_turn = current_turn
+
+        self.white_king_moved = white_king_temp
+        self.black_king_moved = black_king_temp
+        self.white_king_rook = white_king_rook_temp
+        self.white_queen_rook = white_queen_rook_temp
+        self.black_queen_rook = black_queen_rook_temp
+        self.black_king_rook = black_king_rook_temp
 
         return result
 
@@ -347,6 +369,19 @@ class Board:
         for i, j in king_moves:
             if self.is_legal_move(row, col, row + i, col + j):
                 king_legal.append((row, col, row + i, col + j))
+
+        if self.white_turn and row == 7 and col == 4:
+            if self.can_castle(True):
+                king_legal.append((row, col, 7, 6))
+            if self.can_castle(False):
+                king_legal.append((row, col, 7, 2))
+
+        elif not self.white_turn and row == 0 and col == 4:
+            if self.can_castle(True):
+                king_legal.append((row, col, 0, 6))
+            if self.can_castle(False):
+                king_legal.append((row, col, 0, 2))
+
         return king_legal
 
     def generate_bishop_legal_moves(self, row, col):
